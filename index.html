@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Credit Card Fraud Detection</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+    }
+    input {
+      width: 100px;
+      margin: 5px;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Credit Card Fraud Detection</h1>
+  <p>Enter 30 feature values (like V1 to V28, Time, Amount):</p>
+  <div id="inputs"></div>
+
+  <button onclick="makePrediction()">Predict</button>
+  <div id="result"></div>
+
+  <script>
+    const inputDiv = document.getElementById('inputs');
+
+    for (let i = 0; i < 30; i++) {
+      const input = document.createElement("input");
+      input.type = "number";
+      input.placeholder = `Feature ${i+1}`;
+      inputDiv.appendChild(input);
+    }
+
+    function makePrediction() {
+      const inputs = Array.from(inputDiv.querySelectorAll("input")).map(i => parseFloat(i.value));
+      
+      fetch("https://credit-card-fraud-detection-y3u6.onrender.com/predict", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ data: inputs })
+      })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById("result").innerText = data.prediction === 1
+          ? "🚨 Fraudulent Transaction Detected!"
+          : "✅ Transaction is Legitimate.";
+      })
+      .catch(error => {
+        console.error(error);
+        document.getElementById("result").innerText = "Error calling API.";
+      });
+    }
+  </script>
+</body>
+</html>
