@@ -14,7 +14,7 @@ def home():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-   print("Received POST request")
+    print("Received POST request")
     data = request.json['data']
     scaled_data = scaler.transform([np.array(data)])
     prediction = model.predict(scaled_data)
